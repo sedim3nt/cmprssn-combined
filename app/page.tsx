@@ -160,7 +160,7 @@ export default function Home() {
 
   const animClass = animating
     ? animDir === 'forward' ? 'animate-slide-left' : 'animate-slide-right'
-    : 'animate-fade-in';
+    : '';
 
   /* ── LANDING ── */
   if (phase === 'landing') {
