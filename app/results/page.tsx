@@ -14,6 +14,7 @@ import {
 import { calculateOMI, calculateQuadrant, generateDNA } from '@/lib/survey';
 import { decodeAll } from '@/lib/encode';
 import { saveResponse } from '@/lib/supabase';
+import { saveCombinedToAirtable } from '@/lib/airtable';
 
 const DIMENSION_LABELS = {
   fleetDepth: 'Fleet Depth',
@@ -184,6 +185,14 @@ function ResultsInner() {
       diagnostic_scores: scores as unknown as Record<string, number>,
       omi_score: omi,
       quadrant,
+    }).catch(console.error);
+    saveCombinedToAirtable({
+      diagnosticScores: scores as unknown as Record<string, number>,
+      tier: tier?.name || 'Unknown',
+      overallScore: scores.overall,
+      surveyAnswers: surveyAnswers as Record<string, unknown>,
+      quadrant,
+      omiScore: omi,
     }).catch(console.error);
   }, [scores, allDiagAnswered, saved, diagAnswers, surveyAnswers, omi, quadrant]);
 
