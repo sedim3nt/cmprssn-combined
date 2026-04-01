@@ -90,6 +90,7 @@ export default function Home() {
     }, 300);
   }, [animating, diagIdx, diagAnswers]);
 
+  const multiTimerRef = { current: null as ReturnType<typeof setTimeout> | null };
   const handleSurveyAnswer = useCallback((val: string | string[]) => {
     if (animating) return;
     const q = SURVEY_QUESTIONS[surveyIdx];
@@ -100,6 +101,11 @@ export default function Home() {
       setSelected(newArr);
       const key = `q${q.id}` as keyof SurveyAnswers;
       setSurveyAnswers(prev => ({ ...prev, [key]: newArr }));
+      // Auto-advance 1s after last selection
+      if (multiTimerRef.current) clearTimeout(multiTimerRef.current);
+      if (newArr.length > 0) {
+        multiTimerRef.current = setTimeout(() => handleSurveyNext(), 1000);
+      }
     } else {
       setSelected(val as string);
       const key = `q${q.id}` as keyof SurveyAnswers;
@@ -549,10 +555,11 @@ export default function Home() {
               </div>
             )}
 
-            {/* Multi-select */}
+            {/* Multi-select — auto-advances 1s after last tap */}
             {q.type === 'multi' && (
               <div>
-                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px', marginBottom: '24px' }}>
+                <p style={{ fontSize: '12px', color: 'var(--text-muted)', marginBottom: '12px' }}>Select all that apply — advances automatically</p>
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
                   {q.options.map(opt => (
                     <button
                       key={opt.value}
@@ -563,23 +570,6 @@ export default function Home() {
                     </button>
                   ))}
                 </div>
-                <button
-                  onClick={handleSurveyNext}
-                  disabled={!hasAnswer}
-                  style={{
-                    padding: '12px 28px',
-                    background: hasAnswer ? 'rgba(139,92,246,0.15)' : 'transparent',
-                    border: `1px solid ${hasAnswer ? 'rgba(139,92,246,0.5)' : 'var(--border-default)'}`,
-                    borderRadius: '6px',
-                    color: hasAnswer ? 'var(--frost)' : 'var(--text-muted)',
-                    fontFamily: 'var(--font-display)',
-                    fontSize: '12px', letterSpacing: '0.06em', textTransform: 'uppercase',
-                    cursor: hasAnswer ? 'pointer' : 'not-allowed',
-                    transition: 'all 200ms ease',
-                  }}
-                >
-                  Continue →
-                </button>
               </div>
             )}
 
