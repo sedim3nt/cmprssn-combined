@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import AIChatWidget from "@/components/AIChatWidget";
 
 export const metadata: Metadata = {
   title: "CMPRSSN Combined Assessment",
@@ -24,6 +25,7 @@ export default function RootLayout({
         <div style={{ position: 'relative', zIndex: 1, minHeight: '100vh' }}>
           {children}
         </div>
+        <AIChatWidget />
       </body>
     </html>
   );

@@ -190,7 +190,7 @@ function ResultsInner() {
       diagnosticScores: scores as unknown as Record<string, number>,
       tier: tier?.name || 'Unknown',
       overallScore: scores.overall,
-      surveyAnswers: surveyAnswers as Record<string, unknown>,
+      surveyAnswers: surveyAnswers as Record<string, string | string[]>,
       quadrant,
       omiScore: omi,
     }).catch(console.error);
